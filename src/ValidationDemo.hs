@@ -11,10 +11,7 @@ module ValidationDemo
 import Data.List
 import Data.Validation
 import Data.List.NonEmpty
-
-type Nickname = String
-type Age = Int
-data User = User Nickname Age deriving (Show)
+import User
 
 --Either
 
@@ -22,20 +19,27 @@ validateNickname :: String -> Either [String] Nickname
 validateNickname str
     | size < 1 = Left [ "Nickname must have at least 1 character" ]
     | size > 10 = Left [ "Nickname must have at most 10 characters" ]
-    | otherwise = Right str
+    | otherwise = Right $ Nickname str
     where size = Data.List.length str
 
 validateAge :: Int -> Either [String] Age
 validateAge val
     | val < 0 = Left [ "Minimal age is 0" ]
     | val > 150 = Left [ "Maximal age is 150" ]
-    | otherwise = Right val
+    | otherwise = Right $ Age val
 
 validateUser :: String -> Int -> Either [String] User
 validateUser nickname age =
     User
     <$> (validateNickname nickname)
     <*> (validateAge age)
+
+--validateUser "john" 20
+--Right (User (Nickname {getNickname = "john"}) (Age {getAge = 20}))
+
+--validateUser "" 200
+--Left ["Nickname must have at least 1 character"]
+
 
 
 
@@ -45,14 +49,14 @@ validateNicknameA :: String -> Validation (NonEmpty String) Nickname
 validateNicknameA str
     | size < 1 = Failure $ "Nickname must have at least 1 character" :| []
     | size > 10 = Failure $ "Nickname must have at most 10 characters" :| []
-    | otherwise = Success str
+    | otherwise = Success $ Nickname str
     where size = Data.List.length str
 
 validateAgeA :: Int -> Validation (NonEmpty String) Age
 validateAgeA val
     | val < 0 = Failure $ "Minimal age is 0" :| []
     | val > 150 = Failure $  "Maximal age is 150" :| []
-    | otherwise = Success val
+    | otherwise = Success $ Age val
 
 validateUserA :: String -> Int -> Validation (NonEmpty String) User
 validateUserA nickname age =
@@ -60,17 +64,8 @@ validateUserA nickname age =
     <$> (validateNicknameA nickname)
     <*> (validateAgeA age)
 
-
-
---validateUser "john" 20
---Success (User "john" 20)
-
---validateUser "" 200
---Failure ["Nickname must have at least 1 character","Maximal age is 150"]
-
-
 --validateUserA "john" 20
---Success (User "john" 20)
+--Success (User (Nickname {getNickname = "john"}) (Age {getAge = 20}))
 
 --validateUserA "" 200
 --Failure ("Nickname must have at least 1 character" :| ["Maximal age is 150"])

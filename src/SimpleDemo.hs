@@ -8,25 +8,23 @@ module SimpleDemo
   readUserA'
 ) where
 
-type Nickname = String
-type Age = Int
-data User = User Nickname Age deriving (Show)
+import User
 
 createUser :: Nickname -> Age -> User
 createUser = User
 
---createUser "john" 20
---User "john" 20
+--createUser (Nickname "john") (Age 20)
+--User (Nickname {getNickname = "john"}) (Age {getAge = 20})
 
 readNickname :: IO Nickname
 readNickname = do
     _ <- putStrLn "Your nickname:"
-    getLine
+    fmap Nickname getLine
 
 readAge :: IO Age
 readAge = do
     _ <- putStrLn "Your age:"
-    fmap read getLine
+    fmap (Age . read) getLine
 
 readUserM :: IO User
 readUserM = do
