@@ -1,0 +1,5 @@
+.stack-work/
+haskell-applicative-demo.cabal
+*~
+.idea
+haskell-applicative-demo.iml
