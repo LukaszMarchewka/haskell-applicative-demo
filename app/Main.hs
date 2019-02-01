@@ -1,6 +1,6 @@
 module Main where
 
-import Lib
+import SimpleDemo
 
 main :: IO ()
-main = someFunc
+main = putStr "main"
