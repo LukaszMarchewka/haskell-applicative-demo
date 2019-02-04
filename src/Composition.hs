@@ -11,10 +11,11 @@ import Control.Monad.Trans.Maybe
 import Control.Applicative
 import Data.Maybe
 import User
+import Text.Read
 
 readValidNickname :: IO (Maybe Nickname)
 readValidNickname = do
-    _ <- putStrLn "Your name:"
+    putStrLn "Your name:"
     str <- getLine
     if length str > 0
         then return $ Just $ Nickname str
@@ -22,9 +23,9 @@ readValidNickname = do
 
 readValidAge :: IO (Maybe Age)
 readValidAge = do
-    _ <- putStrLn "Your age:"
+    putStrLn "Your age:"
     str <- getLine
-    return $ Just $ Age $ read str
+    return $ fmap Age $ readMaybe str
 
 --Monad Transformers
 

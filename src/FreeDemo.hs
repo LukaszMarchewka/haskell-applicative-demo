@@ -20,30 +20,30 @@ data Field a =
     | BoolField Name Doc
     | ObjectField Name Doc (Ap Field a)
 
-type Model a = Ap Field a
+type Dsl a = Ap Field a
 
-string :: Name -> Doc -> Model String
+string :: Name -> Doc -> Dsl String
 string n d = liftAp $ StringField n d
 
-int :: Name -> Doc -> Model Int
+int :: Name -> Doc -> Dsl Int
 int n d = liftAp $ IntField n d
 
-bool :: Name -> Doc -> Model Bool
+bool :: Name -> Doc -> Dsl Bool
 bool n d = liftAp $ BoolField n d
 
-object :: Name -> Doc -> Model a -> Model a
+object :: Name -> Doc -> Dsl a -> Dsl a
 object n d a = liftAp $ ObjectField n d a
 
 data User = User String Int Bool deriving Show
 data Comment = Comment String User deriving Show
 
-user :: Model User
+user :: Dsl User
 user = User
   <$> string "name" "user's name"
   <*> int "age" "user's age"
   <*> bool "active" "is active"
 
-comment :: Model Comment
+comment :: Dsl Comment
 comment = Comment
   <$> string "title" "short desc"
   <*> object "creator" "who created the comment" user
