@@ -18,12 +18,15 @@ createUser = User
 
 readNickname :: IO Nickname
 readNickname = do
-    _ <- putStrLn "Your nickname:"
-    fmap Nickname getLine
+    putStrLn "Your nickname:"
+    str <- getLine
+    if length str > 0
+        then return $ Nickname str
+        else error "Nickname can't be empty"
 
 readAge :: IO Age
 readAge = do
-    _ <- putStrLn "Your age:"
+    putStrLn "Your age:"
     fmap (Age . read) getLine
 
 readUserM :: IO User
